@@ -2,47 +2,42 @@
 $(function() {
     initialize();
     $('a').click(function() {
-    	var frm = $( '#userForm' ).serialize();
-    	
-    	console.log( frm );
-    	console.log( frm.serialize() );
-    	console.log( frm.serialize().serializeArray() );
-    	console.log( JSON.stringify(frm.serialize().serializeArray()) );
+    	var frm = $( '#userForm' );   	
+    	form.payload = JSON.stringify(frm.serializeArray());
+    	form.post();
     });
 })
 
 
-
-var url;
-function initialize() {
-	url = "http://localhost:8080";		
+var form;
+function initialize() {	
+	
+	form = {			
+		payload : {},
+		
+		post : function () {
+			console.log('here');
+	    		$.ajax({
+	    			type : 'POST',
+	    			contentType : 'application/json',
+	    			url : "http://localhost:8080/user",
+	    			dataType : "json",
+	    			data : form.payload,
+	    			success : function(data, textStatus, jqXHR) {
+	    				console.log('Log created successfully');
+	    			},
+	    			error : function(jqXHR, textStatus, errorThrown) {
+	    				console.log('jqXHR: ' + jqXHR);
+	    				console.log('textStatus: ' + textStatus);
+	    				console.log('errorThrown: ' + errorThrown);
+	    			}
+	    		});
+			}
+			
+	};
 }
 
 
-//$('#userForm').serialize(); 
 
-
-
-var form = {
-		
-		rootURL : url + "/user",
-		
-		post : function addLog(log) {
-		    		$.ajax({
-		    			type : 'POST',
-		    			contentType : 'application/json',
-		    			url : rootURL,
-		    			dataType : "json",
-		    			data : log,
-		    			success : function(data, textStatus, jqXHR) {
-		    				console.log('Log created successfully');
-		    			},
-		    			error : function(jqXHR, textStatus, errorThrown) {
-		    				console.log('Error adding: ' + textStatus);
-		    			}
-		    		});
-				}
-		
-};
 
 
